@@ -1,4 +1,4 @@
-# NYC Flood Damage Prediction
+# NYC Flood Damage Prediction (Summer 2024)
 
 ## Project Overview
 

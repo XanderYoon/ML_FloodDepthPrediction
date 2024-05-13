@@ -1,9 +1,13 @@
 import numpy as np
+
 import tensorflow.keras as keras
 from tensorflow.keras import layers
 import tensorflow as tf
+
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
 
 def build_and_compile_model(x_train):
     """
@@ -22,8 +26,8 @@ def build_and_compile_model(x_train):
     # Define the neural network architecture
     model = keras.Sequential([
         normalizer,
-        layers.Dense(64, activation='relu'),
-        layers.Dense(64, activation='relu'),
+        layers.Dense(64, activation='sigmoid'),
+        layers.Dense(64, activation='sigmoid'),
         layers.Dense(1)
     ])
 
@@ -48,9 +52,10 @@ def plot_loss(history):
     plt.legend()
     plt.grid(True)
 
-def predict(model, x_test, y_test):
-    """
-    Function to plot the true flood depth against the predicted flood depth.
+def plot_predict(prediction, y_test):
+    """ 
+    Function to plot the true flood depth against the predicted flood depth and
+    calculate the coefficient of determination (R^2).
 
     Parameters:
     model (keras.Model): Trained neural network model.
@@ -58,20 +63,20 @@ def predict(model, x_test, y_test):
     y_test (numpy.ndarray): True flood depths for the testing data.
     """
     # Generate predictions
-    test_predictions = model.predict(x_test).flatten()
 
     # Plot true vs. predicted flood depths
-    plt.scatter(y_test, test_predictions)
-    plt.xlabel('True [Flood Depth]')
-    plt.ylabel('Predictions [Flood Depth]')
-    
+    plt.scatter(y_test, prediction)
+    plt.xlabel('True [Damage Rate]')
+    plt.ylabel('Predictions [Damage Rate]')
+
     # Calculate the minimum and maximum values for both axes
-    min_val = min(np.min(y_test), np.min(test_predictions))
-    max_val = max(np.max(y_test), np.max(test_predictions))
-    
+    min_val = min(np.min(y_test), np.min(prediction))
+    max_val = max(np.max(y_test), np.max(prediction))
+
     # Set axis limits
     plt.xlim(min_val, max_val)
     plt.ylim(min_val, max_val)
-    
+
     # Plot the identity line (y = x)
     plt.plot([min_val, max_val], [min_val, max_val], 'r')
+
